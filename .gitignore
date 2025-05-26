@@ -1,0 +1,77 @@
+# Build e binários do .NET
+bin/
+obj/
+**/bin/
+**/obj/
+
+# Configurações do Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Arquivos gerados pelo Rider/JetBrains
+.idea/
+*.sln.iml
+
+# Logs e cache
+*.log
+*.vspscc
+*.vssscc
+
+# Configurações locais do ambiente
+.env
+.env.local
+.env.*.local
+
+# Pacotes NuGet
+*.nupkg
+# Diretório de pacotes local
+packages/
+
+# Arquivos de publish
+publish/
+
+# Arquivos de configuração do IIS Express
+/.vs/
+
+# Arquivos de debug
+*.pdb
+
+# Docker
+docker-compose.override.yml
+**/docker-compose.override.yml
+Dockerfile.*
+
+# Node.js e React (se houver frontend)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Arquivos de build do React
+build/
+dist/
+
+# Cache do npm
+.npm
+
+# Editor e OS
+*.swp
+*.swo
+*.DS_Store
+Thumbs.db
+desktop.ini
+
+# Arquivos temporários do PowerShell
+*.ps1xml
+*.psm1
+*.psd1
+*.pssc
+
+# Arquivos gerados pelo JetBrains Rider
+.idea/
+
+# Configurações do JetBrains Rider
+*.sln.iml
