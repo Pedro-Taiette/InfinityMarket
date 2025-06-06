@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinity Market - Sistema de Cotação</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <div class="brand-icon me-2">
+                    <i class="bi bi-infinity text-white"></i>
+                </div>
+                <span class="brand-text">Infinity Market</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">
+                            <i class="bi bi-house-door me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="anuncios.html">
+                            <i class="bi bi-megaphone me-1"></i>Marketplace
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="empresas.html">
+                            <i class="bi bi-building me-1"></i>Empresas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="funcionarios.html">
+                            <i class="bi bi-people me-1"></i>Funcionários
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="propostas.html">
+                            <i class="bi bi-file-text me-1"></i>Propostas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="certificados.html">
+                            <i class="bi bi-award me-1"></i>Certificados
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
+        <!-- Hero Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="hero-section text-center py-5">
+                    <h1 class="display-4 fw-bold text-primary mb-3">Sistema de Cotação</h1>
+                    <p class="lead text-muted mb-4">Gerencie anúncios, propostas e certificados de forma eficiente</p>
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <a href="anuncios.html" class="btn btn-primary btn-lg">
+                            <i class="bi bi-plus-circle me-2"></i>Novo Anúncio
+                        </a>
+                        <a href="anuncios.html" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-search me-2"></i>Ver Marketplace
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row mb-5">
+            <div class="col-md-3 mb-3">
+                <div class="stat-card">
+                    <div class="stat-icon bg-primary">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number" id="totalEmpresas">-</h3>
+                        <p class="stat-label">Empresas Ativas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stat-card">
+                    <div class="stat-icon bg-success">
+                        <i class="bi bi-megaphone"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number" id="anunciosAbertos">-</h3>
+                        <p class="stat-label">Anúncios Abertos</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stat-card">
+                    <div class="stat-icon bg-warning">
+                        <i class="bi bi-file-text"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number" id="totalPropostas">-</h3>
+                        <p class="stat-label">Propostas Recebidas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="stat-card">
+                    <div class="stat-icon bg-info">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-number" id="totalFuncionarios">-</h3>
+                        <p class="stat-label">Funcionários Ativos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions & Recent Activity -->
+        <div class="row">
+            <!-- Quick Actions -->
+            <div class="col-lg-8 mb-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-lightning-charge text-warning me-2"></i>Ações Rápidas
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="quick-action-card" onclick="window.location.href='anuncios.html'">
+                                    <div class="quick-action-icon bg-primary">
+                                        <i class="bi bi-plus-circle"></i>
+                                    </div>
+                                    <div class="quick-action-content">
+                                        <h6>Criar Anúncio</h6>
+                                        <p class="text-muted mb-0">Publique uma nova cotação</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="quick-action-card" onclick="window.location.href='empresas.html'">
+                                    <div class="quick-action-icon bg-success">
+                                        <i class="bi bi-building-add"></i>
+                                    </div>
+                                    <div class="quick-action-content">
+                                        <h6>Nova Empresa</h6>
+                                        <p class="text-muted mb-0">Cadastrar nova empresa</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="quick-action-card" onclick="window.location.href='propostas.html'">
+                                    <div class="quick-action-icon bg-info">
+                                        <i class="bi bi-file-earmark-plus"></i>
+                                    </div>
+                                    <div class="quick-action-content">
+                                        <h6>Nova Proposta</h6>
+                                        <p class="text-muted mb-0">Enviar proposta para anúncio</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="quick-action-card" onclick="window.location.href='certificados.html'">
+                                    <div class="quick-action-icon bg-warning">
+                                        <i class="bi bi-award"></i>
+                                    </div>
+                                    <div class="quick-action-content">
+                                        <h6>Certificados</h6>
+                                        <p class="text-muted mb-0">Gerar certificados</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="col-lg-4 mb-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-clock-history text-info me-2"></i>Atividade Recente
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="recentActivity">
+                            <div class="text-center py-3">
+                                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                    <span class="visually-hidden">Carregando...</span>
+                                </div>
+                                <p class="text-muted mt-2 mb-0">Carregando atividades...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Announcements -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-star text-warning me-2"></i>Anúncios em Destaque
+                        </h5>
+                        <a href="anuncios.html" class="btn btn-outline-primary btn-sm">Ver Todos</a>
+                    </div>
+                    <div class="card-body">
+                        <div id="featuredAnnouncements" class="row">
+                            <div class="col-12 text-center py-3">
+                                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                    <span class="visually-hidden">Carregando...</span>
+                                </div>
+                                <p class="text-muted mt-2 mb-0">Carregando anúncios...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDashboardData();
+        });
+
+        async function loadDashboardData() {
+            try {
+                // Load statistics
+                const [companies, employees, announcements, proposals] = await Promise.all([
+                    apiRequest('/api/Companies'),
+                    apiRequest('/api/Employees'),
+                    apiRequest('/api/PurchaseAnnouncements'),
+                    apiRequest('/api/Proposals')
+                ]);
+
+                // Update statistics
+                document.getElementById('totalEmpresas').textContent = companies.filter(c => c.isActive).length;
+                document.getElementById('totalFuncionarios').textContent = employees.filter(e => e.isActive).length;
+                document.getElementById('anunciosAbertos').textContent = announcements.filter(a => a.status === 1).length;
+                document.getElementById('totalPropostas').textContent = proposals.length;
+
+                // Load recent activity
+                loadRecentActivity(announcements, proposals);
+
+                // Load featured announcements
+                loadFeaturedAnnouncements(announcements);
+
+            } catch (error) {
+                console.error('Erro ao carregar dados do dashboard:', error);
+                showAlert('Erro ao carregar dados do dashboard', 'danger');
+                
+                // Show error state
+                document.getElementById('totalEmpresas').textContent = '0';
+                document.getElementById('totalFuncionarios').textContent = '0';
+                document.getElementById('anunciosAbertos').textContent = '0';
+                document.getElementById('totalPropostas').textContent = '0';
+                
+                document.getElementById('recentActivity').innerHTML = 
+                    '<p class="text-danger text-center">Erro ao carregar atividades</p>';
+                document.getElementById('featuredAnnouncements').innerHTML = 
+                    '<div class="col-12 text-center"><p class="text-danger">Erro ao carregar anúncios</p></div>';
+            }
+        }
+
+        function loadRecentActivity(announcements, proposals) {
+            const recentActivity = document.getElementById('recentActivity');
+            
+            // Get recent announcements and proposals
+            const recentAnnouncements = announcements
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                .slice(0, 3);
+            
+            const recentProposals = proposals
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                .slice(0, 2);
+
+            let html = '';
+            
+            if (recentAnnouncements.length > 0) {
+                recentAnnouncements.forEach(announcement => {
+                    html += `
+                        <div class="activity-item">
+                            <div class="activity-icon bg-primary">
+                                <i class="bi bi-megaphone"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h6 class="activity-title">${announcement.title}</h6>
+                                <p class="activity-meta">${announcement.companyName}</p>
+                                <small class="text-muted">${formatTimeAgo(announcement.createdAt)}</small>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            if (recentProposals.length > 0) {
+                recentProposals.forEach(proposal => {
+                    html += `
+                        <div class="activity-item">
+                            <div class="activity-icon bg-success">
+                                <i class="bi bi-file-text"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h6 class="activity-title">Nova Proposta</h6>
+                                <p class="activity-meta">${proposal.companyName}</p>
+                                <small class="text-muted">${formatTimeAgo(proposal.createdAt)}</small>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            if (html === '') {
+                html = '<p class="text-muted text-center">Nenhuma atividade recente</p>';
+            }
+
+            recentActivity.innerHTML = html;
+        }
+
+        function loadFeaturedAnnouncements(announcements) {
+            const container = document.getElementById('featuredAnnouncements');
+            
+            // Get open announcements with most proposals
+            const featuredAnnouncements = announcements
+                .filter(a => a.status === 1)
+                .sort((a, b) => b.proposalCount - a.proposalCount)
+                .slice(0, 3);
+
+            if (featuredAnnouncements.length === 0) {
+                container.innerHTML = '<div class="col-12 text-center"><p class="text-muted">Nenhum anúncio em destaque</p></div>';
+                return;
+            }
+
+            container.innerHTML = featuredAnnouncements.map(announcement => `
+                <div class="col-md-4 mb-3">
+                    <div class="featured-announcement-card" onclick="window.location.href='anuncios.html'">
+                        <div class="featured-announcement-header">
+                            <span class="badge bg-success">${announcement.proposalCount} propostas</span>
+                            <small class="text-muted">${formatTimeAgo(announcement.createdAt)}</small>
+                        </div>
+                        <h6 class="featured-announcement-title">${announcement.title}</h6>
+                        <p class="featured-announcement-description">${announcement.description.length > 80 ? announcement.description.substring(0, 80) + '...' : announcement.description}</p>
+                        <div class="featured-announcement-footer">
+                            <small class="text-muted">
+                                <i class="bi bi-building me-1"></i>${announcement.companyName}
+                            </small>
+                            <small class="text-muted">
+                                <i class="bi bi-calendar me-1"></i>${formatDate(announcement.deadlineDate)}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function formatTimeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
+            
+            if (diffInHours < 1) return 'Agora mesmo';
+            if (diffInHours < 24) return `${diffInHours}h atrás`;
+            
+            const diffInDays = Math.floor(diffInHours / 24);
+            if (diffInDays < 7) return `${diffInDays}d atrás`;
+            
+            return formatDate(dateString);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+CREATE DATABASE InfinityMarketDB_7f2c;
