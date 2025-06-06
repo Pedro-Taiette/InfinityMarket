@@ -47,3 +47,6 @@ docker-compose up -d
 - `Dockerfile` - Configuração para construção da imagem Docker
 - `docker-compose.yml` - Configuração para orquestração dos containers
 - `entrypoint.sh` - Script de inicialização dos serviços
+
+site: https://pedro-taiette.github.io/InfinityMarket/
+cnpj: https://www.4devs.com.br/gerador_de_cnpj

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CotacaoAPI.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace CotacaoAPI.Application.DTOs
 {
@@ -15,6 +16,9 @@ namespace CotacaoAPI.Application.DTOs
         public string CompanyName { get; set; } = string.Empty;
         public string CompanyEmail { get; set; } = string.Empty;
         public string CompanyPhone { get; set; } = string.Empty;
+        // Foreign Keys
+        public int PurchaseAnnouncementId { get; set; }
+        public int CompanyId { get; set; }
     }
 
     public class CreateProposalDto

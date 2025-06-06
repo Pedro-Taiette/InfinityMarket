@@ -376,8 +376,8 @@
             }
 
             container.innerHTML = propostasToRender.map(proposta => {
-                const anuncio = anuncios.find(a => a.id === proposta.purchaseAnnouncementId);
-                const empresa = empresas.find(e => e.id === proposta.companyId);
+                const anuncio = anuncios.find(a => a.id == proposta.purchaseAnnouncementId);
+                const empresa = empresas.find(e => e.id == proposta.companyId);
                 
                 return `
                     <div class="col-lg-6 col-xl-4 mb-4">
