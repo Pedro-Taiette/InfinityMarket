@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propostas - Infinity Market</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <div class="brand-icon me-2">
+                    <i class="bi bi-infinity text-white"></i>
+                </div>
+                <span class="brand-text">Infinity Market</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="bi bi-house-door me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="anuncios.html">
+                            <i class="bi bi-megaphone me-1"></i>Marketplace
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="empresas.html">
+                            <i class="bi bi-building me-1"></i>Empresas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="funcionarios.html">
+                            <i class="bi bi-people me-1"></i>Funcionários
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="propostas.html">
+                            <i class="bi bi-file-text me-1"></i>Propostas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="certificados.html">
+                            <i class="bi bi-award me-1"></i>Certificados
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="page-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="h2 mb-1">
+                                <i class="bi bi-file-text text-primary me-2"></i>
+                                Gerenciamento de Propostas
+                            </h1>
+                            <p class="text-muted mb-0">Visualize e gerencie todas as propostas do sistema</p>
+                        </div>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#propostaModal">
+                            <i class="bi bi-plus-circle me-2"></i>Nova Proposta
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Info -->
+        <div id="filterInfo" class="alert alert-info" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <i class="bi bi-info-circle me-2"></i>
+                    <span id="filterText"></span>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-primary" onclick="clearAnuncioFilter()">
+                    <i class="bi bi-x-circle me-1"></i>Remover Filtro
+                </button>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="filter-bar">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="search-box">
+                                <i class="bi bi-search"></i>
+                                <input type="text" class="form-control" id="searchInput" placeholder="Buscar propostas...">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="anuncioFilter">
+                                <option value="">Todos os Anúncios</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="empresaFilter">
+                                <option value="">Todas as Empresas</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                                <i class="bi bi-arrow-clockwise me-1"></i>Limpar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Proposals Cards -->
+        <div id="propostasContainer" class="row">
+            <div class="col-12 text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Carregando...</span>
+                </div>
+                <p class="text-muted mt-3">Carregando propostas...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Proposal Modal -->
+    <div class="modal fade" id="propostaModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-gradient-primary text-white">
+                    <h5 class="modal-title" id="propostaModalTitle">Nova Proposta</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="propostaForm">
+                        <input type="hidden" id="propostaId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="anuncioId" class="form-label">Anúncio *</label>
+                                <select class="form-select" id="anuncioId" required>
+                                    <option value="">Selecione um anúncio</option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="empresaId" class="form-label">Empresa *</label>
+                                <select class="form-select" id="empresaId" required>
+                                    <option value="">Selecione uma empresa</option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descricao" class="form-label">Descrição da Proposta *</label>
+                            <textarea class="form-control" id="descricao" rows="3" required placeholder="Descreva sua proposta detalhadamente..."></textarea>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="valorUnitario" class="form-label">Valor Unitário (R$) *</label>
+                                <input type="number" class="form-control" id="valorUnitario" step="0.01" min="0.01" required>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="valorTotal" class="form-label">Valor Total (R$) *</label>
+                                <input type="number" class="form-control" id="valorTotal" step="0.01" min="0.01" required readonly>
+                                <small class="form-text text-muted">Calculado automaticamente</small>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="prazoEntrega" class="form-label">Prazo de Entrega (dias) *</label>
+                            <input type="number" class="form-control" id="prazoEntrega" min="1" required>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="condicoesPagamento" class="form-label">Condições de Pagamento</label>
+                            <textarea class="form-control" id="condicoesPagamento" rows="2" maxlength="500" placeholder="Ex: À vista, 30 dias, parcelado..."></textarea>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="informacoesAdicionais" class="form-label">Informações Adicionais</label>
+                            <textarea class="form-control" id="informacoesAdicionais" rows="2" maxlength="500" placeholder="Informações extras sobre sua proposta..."></textarea>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProposta()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Announcement Details Modal -->
+    <div class="modal fade" id="anuncioDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-gradient-info text-white">
+                    <h5 class="modal-title">Detalhes do Anúncio</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="anuncioDetailsContent">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="viewAnuncioBtn" onclick="goToAnuncio()">
+                        <i class="bi bi-eye me-1"></i>Ver no Marketplace
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-gradient-danger text-white">
+                    <h5 class="modal-title">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja excluir esta proposta?</p>
+                    <p class="text-danger"><strong>Esta ação não pode ser desfeita.</strong></p>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        let propostas = [];
+        let anuncios = [];
+        let empresas = [];
+        let propostaToDelete = null;
+        let selectedAnuncioId = null;
+        let currentAnuncioForDetails = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if coming from announcements page with specific announcement
+            const urlParams = new URLSearchParams(window.location.search);
+            selectedAnuncioId = urlParams.get('anuncio');
+            
+            loadData();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', debounce(filterPropostas, 300));
+            document.getElementById('anuncioFilter').addEventListener('change', filterPropostas);
+            document.getElementById('empresaFilter').addEventListener('change', filterPropostas);
+            
+            // Auto-calculate total value
+            document.getElementById('valorUnitario').addEventListener('input', calculateTotal);
+            document.getElementById('anuncioId').addEventListener('change', calculateTotal);
+        }
+
+        async function loadData() {
+            try {
+                showLoading('Carregando dados...');
+                
+                // Load all data in parallel
+                const [propostasData, anunciosData, empresasData] = await Promise.all([
+                    selectedAnuncioId ? 
+                        apiRequest(`/api/Proposals/announcement/${selectedAnuncioId}`) : 
+                        apiRequest('/api/Proposals'),
+                    apiRequest('/api/PurchaseAnnouncements'),
+                    apiRequest('/api/Companies')
+                ]);
+
+                propostas = Array.isArray(propostasData) ? propostasData : [];
+                anuncios = Array.isArray(anunciosData) ? anunciosData : [];
+                empresas = Array.isArray(empresasData) ? empresasData : [];
+                
+                console.log(`Carregadas ${propostas.length} propostas, ${anuncios.length} anúncios, ${empresas.length} empresas`);
+                
+                renderPropostas(propostas);
+                populateSelects();
+                
+                // If specific announcement selected, filter and show info
+                if (selectedAnuncioId) {
+                    document.getElementById('anuncioFilter').value = selectedAnuncioId;
+                    showAnuncioFilter();
+                }
+                
+                hideLoading();
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                hideLoading();
+                showAlert('Erro ao carregar dados: ' + error.message, 'danger');
+                document.getElementById('propostasContainer').innerHTML = 
+                    '<div class="col-12 text-center text-danger py-5"><i class="bi bi-exclamation-triangle fs-1"></i><p class="mt-3">Erro ao carregar propostas</p></div>';
+            }
+        }
+
+        function populateSelects() {
+            const openAnuncios = anuncios.filter(a => a.status === 1); // Only open announcements
+            const activeEmpresas = empresas.filter(e => e.isActive);
+            
+            // Populate announcement selects
+            const anuncioSelects = [document.getElementById('anuncioFilter'), document.getElementById('anuncioId')];
+            anuncioSelects.forEach((select, index) => {
+                const defaultOption = index === 0 ? 'Todos os Anúncios' : 'Selecione um anúncio';
+                select.innerHTML = `<option value="">${defaultOption}</option>`;
+                
+                const anunciosToShow = index === 0 ? anuncios : openAnuncios;
+                anunciosToShow.forEach(anuncio => {
+                    select.innerHTML += `<option value="${anuncio.id}">${anuncio.title} - ${anuncio.companyName}</option>`;
+                });
+            });
+
+            // Populate company selects
+            const empresaSelects = [document.getElementById('empresaFilter'), document.getElementById('empresaId')];
+            empresaSelects.forEach((select, index) => {
+                const defaultOption = index === 0 ? 'Todas as Empresas' : 'Selecione uma empresa';
+                select.innerHTML = `<option value="">${defaultOption}</option>`;
+                activeEmpresas.forEach(empresa => {
+                    select.innerHTML += `<option value="${empresa.id}">${empresa.name}</option>`;
+                });
+            });
+        }
+
+        function showAnuncioFilter() {
+            const anuncio = anuncios.find(a => a.id == selectedAnuncioId);
+            if (anuncio) {
+                document.getElementById('filterText').textContent = `Exibindo propostas para: ${anuncio.title}`;
+                document.getElementById('filterInfo').style.display = 'block';
+            }
+        }
+
+        function clearAnuncioFilter() {
+            selectedAnuncioId = null;
+            document.getElementById('anuncioFilter').value = '';
+            document.getElementById('filterInfo').style.display = 'none';
+            // Reload all proposals
+            loadData();
+            // Update URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        function renderPropostas(propostasToRender) {
+            const container = document.getElementById('propostasContainer');
+            
+            if (!propostasToRender || propostasToRender.length === 0) {
+                container.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-file-text fs-1 text-muted"></i>
+                        <h4 class="text-muted mt-3">Nenhuma proposta encontrada</h4>
+                        <p class="text-muted">Seja o primeiro a enviar uma proposta!</p>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#propostaModal">
+                            <i class="bi bi-plus-circle me-2"></i>Criar Primeira Proposta
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = propostasToRender.map(proposta => {
+                const anuncio = anuncios.find(a => a.id === proposta.purchaseAnnouncementId);
+                const empresa = empresas.find(e => e.id === proposta.companyId);
+                
+                return `
+                    <div class="col-lg-6 col-xl-4 mb-4">
+                        <div class="proposal-card">
+                            <div class="proposal-card-header">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="company-info">
+                                        <h6 class="company-name">${empresa ? empresa.name : 'Empresa não encontrada'}</h6>
+                                        <small class="text-muted">${empresa ? empresa.email : ''}</small>
+                                    </div>
+                                    <div class="proposal-value">
+                                        <span class="value-label">Valor Total</span>
+                                        <span class="value-amount">${formatCurrency(proposta.totalPrice || 0)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="proposal-card-body">
+                                <div class="announcement-info mb-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="announcement-title mb-0">${anuncio ? anuncio.title : 'Anúncio não encontrado'}</h6>
+                                        ${anuncio ? `
+                                            <button class="btn btn-outline-primary btn-sm" onclick="viewAnuncioDetails(${anuncio.id})" title="Ver Detalhes do Anúncio">
+                                                <i class="bi bi-info-circle"></i>
+                                            </button>
+                                        ` : ''}
+                                    </div>
+                                    ${anuncio ? `
+                                        <small class="text-muted">
+                                            <i class="bi bi-building me-1"></i>${anuncio.companyName} • 
+                                            <i class="bi bi-calendar me-1"></i>Prazo: ${formatDate(anuncio.deadlineDate)}
+                                        </small>
+                                    ` : ''}
+                                </div>
+                                
+                                <div class="proposal-description">
+                                    <p>${(proposta.description || '').length > 100 ? proposta.description.substring(0, 100) + '...' : proposta.description}</p>
+                                </div>
+                                
+                                <div class="proposal-details">
+                                    <div class="detail-row">
+                                        <span class="detail-label">Valor Unitário:</span>
+                                        <span class="detail-value">${formatCurrency(proposta.unitPrice || 0)}</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">Prazo de Entrega:</span>
+                                        <span class="detail-value">${proposta.deliveryDays || 0} dias</span>
+                                    </div>
+                                    ${proposta.paymentConditions ? `
+                                        <div class="detail-row">
+                                            <span class="detail-label">Pagamento:</span>
+                                            <span class="detail-value">${proposta.paymentConditions}</span>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                            
+                            <div class="proposal-card-footer">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="bi bi-clock me-1"></i>
+                                        ${formatTimeAgo(proposta.createdAt)}
+                                    </small>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-outline-primary btn-sm" onclick="viewProposta(${proposta.id})" title="Visualizar">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                        <button class="btn btn-outline-warning btn-sm" onclick="editProposta(${proposta.id})" title="Editar">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm" onclick="deleteProposta(${proposta.id})" title="Excluir">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function viewAnuncioDetails(anuncioId) {
+            const anuncio = anuncios.find(a => a.id === anuncioId);
+            if (anuncio) {
+                currentAnuncioForDetails = anuncioId;
+                const content = document.getElementById('anuncioDetailsContent');
+                content.innerHTML = `
+                    <div class="announcement-details">
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <h5 class="text-primary">${anuncio.title}</h5>
+                                <p class="text-muted mb-2">
+                                    <i class="bi bi-building me-1"></i>${anuncio.companyName} • 
+                                    <i class="bi bi-person me-1"></i>${anuncio.employeeName}
+                                </p>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <span class="badge bg-${getStatusColor(anuncio.status)} fs-6">${getStatusText(anuncio.status)}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6>Descrição</h6>
+                            <p>${anuncio.description}</p>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            ${anuncio.quantity ? `
+                                <div class="col-md-6">
+                                    <h6>Quantidade</h6>
+                                    <p><i class="bi bi-box text-info me-1"></i>${anuncio.quantity} ${anuncio.unit || 'unidades'}</p>
+                                </div>
+                            ` : ''}
+                            <div class="col-md-6">
+                                <h6>Prazo Final</h6>
+                                <p><i class="bi bi-calendar-event text-warning me-1"></i>${formatDate(anuncio.deadlineDate)}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Propostas Recebidas</h6>
+                                <p><i class="bi bi-file-text text-success me-1"></i>${anuncio.proposalCount} propostas</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Data de Criação</h6>
+                                <p><i class="bi bi-clock text-muted me-1"></i>${formatDate(anuncio.createdAt)}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                new bootstrap.Modal(document.getElementById('anuncioDetailsModal')).show();
+            }
+        }
+
+        function goToAnuncio() {
+            if (currentAnuncioForDetails) {
+                window.location.href = `anuncios.html#anuncio-${currentAnuncioForDetails}`;
+            }
+        }
+
+        function filterPropostas() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const anuncioFilter = document.getElementById('anuncioFilter').value;
+            const empresaFilter = document.getElementById('empresaFilter').value;
+
+            let filtered = propostas.filter(proposta => {
+                const anuncio = anuncios.find(a => a.id === proposta.purchaseAnnouncementId);
+                const empresa = empresas.find(e => e.id === proposta.companyId);
+                const anuncioTitle = anuncio ? anuncio.title.toLowerCase() : '';
+                const empresaName = empresa ? empresa.name.toLowerCase() : '';
+                
+                const matchesSearch = (proposta.description || '').toLowerCase().includes(searchTerm) ||
+                                    empresaName.includes(searchTerm) ||
+                                    anuncioTitle.includes(searchTerm);
+                
+                const matchesAnuncio = anuncioFilter === '' || (proposta.purchaseAnnouncementId && proposta.purchaseAnnouncementId.toString() === anuncioFilter);
+                const matchesEmpresa = empresaFilter === '' || (proposta.companyId && proposta.companyId.toString() === empresaFilter);
+
+                return matchesSearch && matchesAnuncio && matchesEmpresa;
+            });
+
+            renderPropostas(filtered);
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('anuncioFilter').value = '';
+            document.getElementById('empresaFilter').value = '';
+            clearAnuncioFilter();
+        }
+
+        function calculateTotal() {
+            const valorUnitario = parseFloat(document.getElementById('valorUnitario').value) || 0;
+            const anuncioId = document.getElementById('anuncioId').value;
+            
+            if (anuncioId && valorUnitario > 0) {
+                const anuncio = anuncios.find(a => a.id == anuncioId);
+                if (anuncio && anuncio.quantity) {
+                    const total = valorUnitario * anuncio.quantity;
+                    document.getElementById('valorTotal').value = total.toFixed(2);
+                } else {
+                    // If no quantity specified, assume 1
+                    document.getElementById('valorTotal').value = valorUnitario.toFixed(2);
+                }
+            } else {
+                document.getElementById('valorTotal').value = '';
+            }
+        }
+
+        function openPropostaModal(title, proposta = null) {
+            document.getElementById('propostaModalTitle').textContent = title;
+            document.getElementById('propostaForm').reset();
+            clearValidation();
+
+            if (proposta) {
+                document.getElementById('propostaId').value = proposta.id;
+                document.getElementById('anuncioId').value = proposta.purchaseAnnouncementId;
+                document.getElementById('empresaId').value = proposta.companyId;
+                document.getElementById('descricao').value = proposta.description || '';
+                document.getElementById('valorUnitario').value = proposta.unitPrice || '';
+                document.getElementById('valorTotal').value = proposta.totalPrice || '';
+                document.getElementById('prazoEntrega').value = proposta.deliveryDays || '';
+                document.getElementById('condicoesPagamento').value = proposta.paymentConditions || '';
+                document.getElementById('informacoesAdicionais').value = proposta.additionalInfo || '';
+            } else {
+                document.getElementById('propostaId').value = '';
+                // Pre-select announcement if coming from announcements page
+                if (selectedAnuncioId) {
+                    document.getElementById('anuncioId').value = selectedAnuncioId;
+                }
+            }
+
+            new bootstrap.Modal(document.getElementById('propostaModal')).show();
+        }
+
+        function viewProposta(id) {
+            const proposta = propostas.find(p => p.id === id);
+            if (proposta) {
+                openPropostaModal('Visualizar Proposta', proposta);
+                // Disable all form fields for view mode
+                const form = document.getElementById('propostaForm');
+                const inputs = form.querySelectorAll('input, textarea, select');
+                inputs.forEach(input => input.disabled = true);
+                
+                // Hide save button
+                document.querySelector('#propostaModal .btn-primary').style.display = 'none';
+            }
+        }
+
+        function editProposta(id) {
+            const proposta = propostas.find(p => p.id === id);
+            if (proposta) {
+                openPropostaModal('Editar Proposta', proposta);
+            }
+        }
+
+        function deleteProposta(id) {
+            propostaToDelete = id;
+            new bootstrap.Modal(document.getElementById('deleteModal')).show();
+        }
+
+        async function confirmDelete() {
+            if (propostaToDelete) {
+                try {
+                    await apiRequest(`/api/Proposals/${propostaToDelete}`, 'DELETE');
+                    showAlert('Proposta excluída com sucesso!', 'success');
+                    loadData();
+                    bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+                } catch (error) {
+                    console.error('Erro ao excluir proposta:', error);
+                    showAlert('Erro ao excluir proposta: ' + error.message, 'danger');
+                }
+                propostaToDelete = null;
+            }
+        }
+
+        async function saveProposta() {
+            const form = document.getElementById('propostaForm');
+            const propostaId = document.getElementById('propostaId').value;
+            
+            if (!validateForm(form)) {
+                return;
+            }
+
+            const propostaData = {
+                description: document.getElementById('descricao').value,
+                unitPrice: parseFloat(document.getElementById('valorUnitario').value),
+                totalPrice: parseFloat(document.getElementById('valorTotal').value),
+                deliveryDays: parseInt(document.getElementById('prazoEntrega').value),
+                paymentConditions: document.getElementById('condicoesPagamento').value || null,
+                additionalInfo: document.getElementById('informacoesAdicionais').value || null,
+                purchaseAnnouncementId: parseInt(document.getElementById('anuncioId').value),
+                companyId: parseInt(document.getElementById('empresaId').value)
+            };
+
+            try {
+                if (propostaId) {
+                    await apiRequest(`/api/Proposals/${propostaId}`, 'PUT', propostaData);
+                    showAlert('Proposta atualizada com sucesso!', 'success');
+                } else {
+                    await apiRequest('/api/Proposals', 'POST', propostaData);
+                    showAlert('Proposta criada com sucesso!', 'success');
+                }
+                
+                bootstrap.Modal.getInstance(document.getElementById('propostaModal')).hide();
+                loadData();
+            } catch (error) {
+                console.error('Erro ao salvar proposta:', error);
+                showAlert('Erro ao salvar proposta: ' + error.message, 'danger');
+            }
+        }
+
+        function formatTimeAgo(dateString) {
+            if (!dateString) return '-';
+            
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
+            
+            if (diffInHours < 1) return 'agora mesmo';
+            if (diffInHours < 24) return `${diffInHours}h atrás`;
+            
+            const diffInDays = Math.floor(diffInHours / 24);
+            if (diffInDays < 7) return `${diffInDays}d atrás`;
+            
+            return formatDate(dateString);
+        }
+    </script>
+</body>
+</html>

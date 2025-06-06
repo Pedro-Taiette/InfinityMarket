@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empresas - Infinity Market</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <div class="brand-icon me-2">
+                    <i class="bi bi-infinity text-white"></i>
+                </div>
+                <span class="brand-text">Infinity Market</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="bi bi-house-door me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="anuncios.html">
+                            <i class="bi bi-megaphone me-1"></i>Marketplace
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="empresas.html">
+                            <i class="bi bi-building me-1"></i>Empresas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="funcionarios.html">
+                            <i class="bi bi-people me-1"></i>Funcionários
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="propostas.html">
+                            <i class="bi bi-file-text me-1"></i>Propostas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="certificados.html">
+                            <i class="bi bi-award me-1"></i>Certificados
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="page-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="h2 mb-1">Gerenciamento de Empresas</h1>
+                            <p class="text-muted mb-0">Cadastre e gerencie empresas do sistema</p>
+                        </div>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#empresaModal">
+                            <i class="bi bi-plus-circle me-2"></i>Nova Empresa
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="filter-bar">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="search-box">
+                                <i class="bi bi-search"></i>
+                                <input type="text" class="form-control" id="searchInput" placeholder="Buscar empresas...">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="statusFilter">
+                                <option value="">Todos os Status</option>
+                                <option value="true">Ativas</option>
+                                <option value="false">Inativas</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                                <i class="bi bi-arrow-clockwise me-1"></i>Limpar Filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Companies Table -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Empresa</th>
+                                <th>CNPJ</th>
+                                <th>Contato</th>
+                                <th>Status</th>
+                                <th>Data Cadastro</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="empresasTableBody">
+                            <tr>
+                                <td colspan="6" class="text-center py-4">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Carregando...</span>
+                                    </div>
+                                    <p class="text-muted mt-2 mb-0">Carregando empresas...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Company Modal -->
+    <div class="modal fade" id="empresaModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="empresaModalTitle">Nova Empresa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="empresaForm">
+                        <input type="hidden" id="empresaId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nome" class="form-label">Nome da Empresa *</label>
+                                <input type="text" class="form-control" id="nome" required maxlength="200" placeholder="Ex: Empresa ABC Ltda">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="cnpj" class="form-label">CNPJ *</label>
+                                <input type="text" class="form-control" id="cnpj" required maxlength="18" placeholder="00.000.000/0000-00">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="email" required maxlength="200" placeholder="contato@empresa.com">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="telefone" class="form-label">Telefone</label>
+                                <input type="text" class="form-control" id="telefone" maxlength="20" placeholder="(00) 00000-0000">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="endereco" class="form-label">Endereço</label>
+                            <input type="text" class="form-control" id="endereco" maxlength="300" placeholder="Rua, número, bairro, cidade - UF">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descricao" class="form-label">Descrição da Empresa</label>
+                            <textarea class="form-control" id="descricao" rows="3" maxlength="500" placeholder="Descreva a atividade principal da empresa..."></textarea>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                        <div class="mb-3" id="statusGroup" style="display: none;">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="isActive">
+                                <label class="form-check-label" for="isActive">
+                                    Empresa Ativa
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveEmpresa()">
+                        <i class="bi bi-check-circle me-1"></i>Salvar Empresa
+                    </button>
+                    <button type="button" class="btn btn-success" id="addEmployeeBtn" onclick="addEmployee()" style="display: none;">
+                        <i class="bi bi-person-plus me-1"></i>Adicionar Funcionário
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja excluir esta empresa?</p>
+                    <p class="text-danger"><strong>Esta ação não pode ser desfeita.</strong></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        let empresas = [];
+        let empresaToDelete = null;
+        let lastCreatedEmpresaId = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadEmpresas();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', debounce(filterEmpresas, 300));
+            document.getElementById('statusFilter').addEventListener('change', filterEmpresas);
+            
+            // CNPJ mask
+            document.getElementById('cnpj').addEventListener('input', function(e) {
+                e.target.value = formatCNPJ(e.target.value);
+            });
+            
+            // Phone mask
+            document.getElementById('telefone').addEventListener('input', function(e) {
+                e.target.value = formatPhone(e.target.value);
+            });
+        }
+
+        async function loadEmpresas() {
+            try {
+                empresas = await apiRequest('/api/Companies');
+                renderEmpresas(empresas);
+            } catch (error) {
+                console.error('Erro ao carregar empresas:', error);
+                showAlert('Erro ao carregar empresas', 'danger');
+                document.getElementById('empresasTableBody').innerHTML = 
+                    '<tr><td colspan="6" class="text-center text-danger py-4">Erro ao carregar dados</td></tr>';
+            }
+        }
+
+        function renderEmpresas(empresasToRender) {
+            const tbody = document.getElementById('empresasTableBody');
+            
+            if (empresasToRender.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <i class="bi bi-building fs-1 text-muted"></i>
+                            <p class="text-muted mt-2 mb-0">Nenhuma empresa encontrada</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = empresasToRender.map(empresa => `
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="company-avatar me-3">
+                                <i class="bi bi-building-fill text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">${empresa.name}</h6>
+                                ${empresa.description ? `<small class="text-muted">${empresa.description.length > 50 ? empresa.description.substring(0, 50) + '...' : empresa.description}</small>` : ''}
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <code>${formatCNPJ(empresa.cnpj)}</code>
+                    </td>
+                    <td>
+                        <div>
+                            <div><i class="bi bi-envelope me-1 text-muted"></i>${empresa.email}</div>
+                            ${empresa.phone ? `<div><i class="bi bi-telephone me-1 text-muted"></i>${empresa.phone}</div>` : ''}
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge bg-${empresa.isActive ? 'success' : 'secondary'}">
+                            <i class="bi bi-${empresa.isActive ? 'check-circle' : 'x-circle'} me-1"></i>
+                            ${empresa.isActive ? 'Ativa' : 'Inativa'}
+                        </span>
+                    </td>
+                    <td>
+                        <small class="text-muted">${formatDate(empresa.createdAt)}</small>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-primary" onclick="viewEmpresa(${empresa.id})" title="Visualizar">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <button class="btn btn-outline-warning" onclick="editEmpresa(${empresa.id})" title="Editar">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-outline-success" onclick="addEmployeeToCompany(${empresa.id})" title="Adicionar Funcionário">
+                                <i class="bi bi-person-plus"></i>
+                            </button>
+                            <button class="btn btn-outline-danger" onclick="deleteEmpresa(${empresa.id})" title="Excluir">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterEmpresas() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            let filtered = empresas.filter(empresa => {
+                const matchesSearch = empresa.name.toLowerCase().includes(searchTerm) ||
+                                    empresa.cnpj.includes(searchTerm) ||
+                                    empresa.email.toLowerCase().includes(searchTerm);
+                
+                const matchesStatus = statusFilter === '' || empresa.isActive.toString() === statusFilter;
+
+                return matchesSearch && matchesStatus;
+            });
+
+            renderEmpresas(filtered);
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('statusFilter').value = '';
+            renderEmpresas(empresas);
+        }
+
+        function openEmpresaModal(title, empresa = null) {
+            document.getElementById('empresaModalTitle').textContent = title;
+            document.getElementById('empresaForm').reset();
+            clearValidation();
+
+            // Reset button visibility
+            document.querySelector('#empresaModal .btn-primary').style.display = 'inline-block';
+            document.getElementById('addEmployeeBtn').style.display = 'none';
+
+            if (empresa) {
+                document.getElementById('empresaId').value = empresa.id;
+                document.getElementById('nome').value = empresa.name;
+                document.getElementById('cnpj').value = formatCNPJ(empresa.cnpj);
+                document.getElementById('email').value = empresa.email;
+                document.getElementById('telefone').value = empresa.phone || '';
+                document.getElementById('endereco').value = empresa.address || '';
+                document.getElementById('descricao').value = empresa.description || '';
+                document.getElementById('isActive').checked = empresa.isActive;
+                document.getElementById('statusGroup').style.display = 'block';
+            } else {
+                document.getElementById('empresaId').value = '';
+                document.getElementById('statusGroup').style.display = 'none';
+            }
+
+            new bootstrap.Modal(document.getElementById('empresaModal')).show();
+        }
+
+        function viewEmpresa(id) {
+            const empresa = empresas.find(e => e.id === id);
+            if (empresa) {
+                openEmpresaModal('Visualizar Empresa', empresa);
+                // Disable all form fields for view mode
+                const form = document.getElementById('empresaForm');
+                const inputs = form.querySelectorAll('input, textarea');
+                inputs.forEach(input => input.disabled = true);
+                
+                // Hide save button, show add employee button
+                document.querySelector('#empresaModal .btn-primary').style.display = 'none';
+                document.getElementById('addEmployeeBtn').style.display = 'inline-block';
+                lastCreatedEmpresaId = id;
+            }
+        }
+
+        function editEmpresa(id) {
+            const empresa = empresas.find(e => e.id === id);
+            if (empresa) {
+                openEmpresaModal('Editar Empresa', empresa);
+            }
+        }
+
+        function deleteEmpresa(id) {
+            empresaToDelete = id;
+            new bootstrap.Modal(document.getElementById('deleteModal')).show();
+        }
+
+        function addEmployeeToCompany(companyId) {
+            window.location.href = `funcionarios.html?empresa=${companyId}`;
+        }
+
+        function addEmployee() {
+            if (lastCreatedEmpresaId) {
+                window.location.href = `funcionarios.html?empresa=${lastCreatedEmpresaId}`;
+            } else {
+                window.location.href = 'funcionarios.html';
+            }
+        }
+
+        async function confirmDelete() {
+            if (empresaToDelete) {
+                try {
+                    await apiRequest(`/api/Companies/${empresaToDelete}`, 'DELETE');
+                    showAlert('Empresa excluída com sucesso!', 'success');
+                    loadEmpresas();
+                    bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+                } catch (error) {
+                    console.error('Erro ao excluir empresa:', error);
+                    showAlert('Erro ao excluir empresa', 'danger');
+                }
+                empresaToDelete = null;
+            }
+        }
+
+        async function saveEmpresa() {
+            const form = document.getElementById('empresaForm');
+            const empresaId = document.getElementById('empresaId').value;
+            
+            if (!validateForm(form)) {
+                return;
+            }
+
+            const empresaData = {
+                name: document.getElementById('nome').value,
+                cnpj: document.getElementById('cnpj').value.replace(/\D/g, ''),
+                email: document.getElementById('email').value,
+                phone: document.getElementById('telefone').value || null,
+                address: document.getElementById('endereco').value || null,
+                description: document.getElementById('descricao').value || null
+            };
+
+            if (empresaId) {
+                empresaData.isActive = document.getElementById('isActive').checked;
+            }
+
+            try {
+                let savedEmpresa;
+                if (empresaId) {
+                    savedEmpresa = await apiRequest(`/api/Companies/${empresaId}`, 'PUT', empresaData);
+                    showAlert('Empresa atualizada com sucesso!', 'success');
+                } else {
+                    savedEmpresa = await apiRequest('/api/Companies', 'POST', empresaData);
+                    showAlert('Empresa criada com sucesso!', 'success');
+                    lastCreatedEmpresaId = savedEmpresa.id;
+                    
+                    // Show add employee button for new companies
+                    document.querySelector('#empresaModal .btn-primary').style.display = 'none';
+                    document.getElementById('addEmployeeBtn').style.display = 'inline-block';
+                    
+                    // Don't close modal, allow user to add employee
+                    loadEmpresas();
+                    return;
+                }
+                
+                bootstrap.Modal.getInstance(document.getElementById('empresaModal')).hide();
+                loadEmpresas();
+            } catch (error) {
+                console.error('Erro ao salvar empresa:', error);
+                showAlert('Erro ao salvar empresa', 'danger');
+            }
+        }
+
+        // Format functions
+        function formatCNPJ(cnpj) {
+            cnpj = cnpj.replace(/\D/g, '');
+            cnpj = cnpj.replace(/^(\d{2})(\d)/, '$1.$2');
+            cnpj = cnpj.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+            cnpj = cnpj.replace(/\.(\d{3})(\d)/, '.$1/$2');
+            cnpj = cnpj.replace(/(\d{4})(\d)/, '$1-$2');
+            return cnpj;
+        }
+
+        function formatPhone(phone) {
+            phone = phone.replace(/\D/g, '');
+            phone = phone.replace(/^(\d{2})(\d)/, '($1) $2');
+            phone = phone.replace(/(\d{5})(\d)/, '$1-$2');
+            return phone;
+        }
+    </script>
+</body>
+</html>

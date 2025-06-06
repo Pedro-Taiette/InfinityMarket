@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funcionários - Infinity Market</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <div class="brand-icon me-2">
+                    <i class="bi bi-infinity text-white"></i>
+                </div>
+                <span class="brand-text">Infinity Market</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">
+                            <i class="bi bi-house-door me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="anuncios.html">
+                            <i class="bi bi-megaphone me-1"></i>Marketplace
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="empresas.html">
+                            <i class="bi bi-building me-1"></i>Empresas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="funcionarios.html">
+                            <i class="bi bi-people me-1"></i>Funcionários
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="propostas.html">
+                            <i class="bi bi-file-text me-1"></i>Propostas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="certificados.html">
+                            <i class="bi bi-award me-1"></i>Certificados
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="page-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1 class="h2 mb-1">Gerenciamento de Funcionários</h1>
+                            <p class="text-muted mb-0">Cadastre e gerencie funcionários das empresas</p>
+                        </div>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#funcionarioModal">
+                            <i class="bi bi-plus-circle me-2"></i>Novo Funcionário
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Info -->
+        <div id="filterInfo" class="alert alert-info" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <i class="bi bi-info-circle me-2"></i>
+                    <span id="filterText"></span>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-primary" onclick="clearEmpresaFilter()">
+                    <i class="bi bi-x-circle me-1"></i>Remover Filtro
+                </button>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="filter-bar">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="search-box">
+                                <i class="bi bi-search"></i>
+                                <input type="text" class="form-control" id="searchInput" placeholder="Buscar funcionários...">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="empresaFilter">
+                                <option value="">Todas as Empresas</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select class="form-select" id="statusFilter">
+                                <option value="">Todos os Status</option>
+                                <option value="true">Ativos</option>
+                                <option value="false">Inativos</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                                <i class="bi bi-arrow-clockwise me-1"></i>Limpar Filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Employees Table -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th>Cargo</th>
+                                <th>Empresa</th>
+                                <th>Status</th>
+                                <th>Data Cadastro</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="funcionariosTableBody">
+                            <tr>
+                                <td colspan="8" class="text-center py-4">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Carregando...</span>
+                                    </div>
+                                    <p class="text-muted mt-2 mb-0">Carregando funcionários...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Employee Modal -->
+    <div class="modal fade" id="funcionarioModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="funcionarioModalTitle">Novo Funcionário</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="funcionarioForm">
+                        <input type="hidden" id="funcionarioId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nome" class="form-label">Nome *</label>
+                                <input type="text" class="form-control" id="nome" required maxlength="200" placeholder="Nome completo">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="email" required maxlength="200" placeholder="email@exemplo.com">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="telefone" class="form-label">Telefone</label>
+                                <input type="text" class="form-control" id="telefone" maxlength="20" placeholder="(00) 00000-0000">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="cargo" class="form-label">Cargo</label>
+                                <input type="text" class="form-control" id="cargo" maxlength="100" placeholder="Ex: Gerente de Compras">
+                                <div class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="empresaId" class="form-label">Empresa *</label>
+                                <select class="form-select" id="empresaId" required>
+                                    <option value="">Selecione uma empresa</option>
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+                            <div class="col-md-6 mb-3" id="statusGroup" style="display: none;">
+                                <div class="form-check mt-4">
+                                    <input class="form-check-input" type="checkbox" id="isActive">
+                                    <label class="form-check-label" for="isActive">
+                                        Funcionário Ativo
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveFuncionario()">
+                        <i class="bi bi-check-circle me-1"></i>Salvar Funcionário
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja excluir este funcionário?</p>
+                    <p class="text-danger"><strong>Esta ação não pode ser desfeita.</strong></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        let funcionarios = [];
+        let empresas = [];
+        let funcionarioToDelete = null;
+        let selectedEmpresaId = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if coming from companies page with specific company
+            const urlParams = new URLSearchParams(window.location.search);
+            selectedEmpresaId = urlParams.get('empresa');
+            
+            loadData();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', debounce(filterFuncionarios, 300));
+            document.getElementById('empresaFilter').addEventListener('change', filterFuncionarios);
+            document.getElementById('statusFilter').addEventListener('change', filterFuncionarios);
+            
+            // Phone mask
+            document.getElementById('telefone').addEventListener('input', function(e) {
+                e.target.value = formatPhone(e.target.value);
+            });
+        }
+
+        async function loadData() {
+            try {
+                [funcionarios, empresas] = await Promise.all([
+                    apiRequest('/api/Employees'),
+                    apiRequest('/api/Companies')
+                ]);
+                
+                renderFuncionarios(funcionarios);
+                populateEmpresaSelects();
+                
+                // If specific company selected, filter and show info
+                if (selectedEmpresaId) {
+                    document.getElementById('empresaFilter').value = selectedEmpresaId;
+                    filterFuncionarios();
+                    showEmpresaFilter();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                showAlert('Erro ao carregar dados', 'danger');
+                document.getElementById('funcionariosTableBody').innerHTML = 
+                    '<tr><td colspan="8" class="text-center text-danger py-4">Erro ao carregar dados</td></tr>';
+            }
+        }
+
+        function populateEmpresaSelects() {
+            const activeEmpresas = empresas.filter(e => e.isActive);
+            
+            // Populate filter select
+            const filterSelect = document.getElementById('empresaFilter');
+            filterSelect.innerHTML = '<option value="">Todas as Empresas</option>';
+            activeEmpresas.forEach(empresa => {
+                filterSelect.innerHTML += `<option value="${empresa.id}">${empresa.name}</option>`;
+            });
+
+            // Populate form select
+            const formSelect = document.getElementById('empresaId');
+            formSelect.innerHTML = '<option value="">Selecione uma empresa</option>';
+            activeEmpresas.forEach(empresa => {
+                formSelect.innerHTML += `<option value="${empresa.id}">${empresa.name}</option>`;
+            });
+        }
+
+        function showEmpresaFilter() {
+            const empresa = empresas.find(e => e.id == selectedEmpresaId);
+            if (empresa) {
+                document.getElementById('filterText').textContent = `Exibindo funcionários da empresa: ${empresa.name}`;
+                document.getElementById('filterInfo').style.display = 'block';
+            }
+        }
+
+        function clearEmpresaFilter() {
+            selectedEmpresaId = null;
+            document.getElementById('empresaFilter').value = '';
+            document.getElementById('filterInfo').style.display = 'none';
+            filterFuncionarios();
+            // Update URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        function renderFuncionarios(funcionariosToRender) {
+            const tbody = document.getElementById('funcionariosTableBody');
+            
+            if (funcionariosToRender.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center py-4">
+                            <i class="bi bi-people fs-1 text-muted"></i>
+                            <p class="text-muted mt-2 mb-0">Nenhum funcionário encontrado</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = funcionariosToRender.map(funcionario => `
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="employee-avatar me-3">
+                                <i class="bi bi-person-fill text-success"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">${funcionario.name}</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${funcionario.email}</td>
+                    <td>${funcionario.phone || '-'}</td>
+                    <td>${funcionario.position || '-'}</td>
+                    <td>
+                        <span class="badge bg-light text-dark">${funcionario.companyName}</span>
+                    </td>
+                    <td>
+                        <span class="badge bg-${funcionario.isActive ? 'success' : 'secondary'}">
+                            <i class="bi bi-${funcionario.isActive ? 'check-circle' : 'x-circle'} me-1"></i>
+                            ${funcionario.isActive ? 'Ativo' : 'Inativo'}
+                        </span>
+                    </td>
+                    <td>
+                        <small class="text-muted">${formatDate(funcionario.createdAt)}</small>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-primary" onclick="viewFuncionario(${funcionario.id})" title="Visualizar">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <button class="btn btn-outline-warning" onclick="editFuncionario(${funcionario.id})" title="Editar">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-outline-danger" onclick="deleteFuncionario(${funcionario.id})" title="Excluir">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterFuncionarios() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const empresaFilter = document.getElementById('empresaFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            let filtered = funcionarios.filter(funcionario => {
+                const matchesSearch = funcionario.name.toLowerCase().includes(searchTerm) ||
+                                    funcionario.email.toLowerCase().includes(searchTerm) ||
+                                    (funcionario.position && funcionario.position.toLowerCase().includes(searchTerm)) ||
+                                    funcionario.companyName.toLowerCase().includes(searchTerm);
+                
+                const matchesEmpresa = empresaFilter === '' || funcionario.companyId.toString() === empresaFilter;
+                const matchesStatus = statusFilter === '' || funcionario.isActive.toString() === statusFilter;
+
+                return matchesSearch && matchesEmpresa && matchesStatus;
+            });
+
+            renderFuncionarios(filtered);
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('empresaFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            clearEmpresaFilter();
+        }
+
+        function openFuncionarioModal(title, funcionario = null) {
+            document.getElementById('funcionarioModalTitle').textContent = title;
+            document.getElementById('funcionarioForm').reset();
+            clearValidation();
+
+            if (funcionario) {
+                document.getElementById('funcionarioId').value = funcionario.id;
+                document.getElementById('nome').value = funcionario.name;
+                document.getElementById('email').value = funcionario.email;
+                document.getElementById('telefone').value = funcionario.phone || '';
+                document.getElementById('cargo').value = funcionario.position || '';
+                document.getElementById('empresaId').value = funcionario.companyId;
+                document.getElementById('isActive').checked = funcionario.isActive;
+                document.getElementById('statusGroup').style.display = 'block';
+            } else {
+                document.getElementById('funcionarioId').value = '';
+                document.getElementById('statusGroup').style.display = 'none';
+                
+                // Pre-select company if coming from companies page
+                if (selectedEmpresaId) {
+                    document.getElementById('empresaId').value = selectedEmpresaId;
+                }
+            }
+
+            new bootstrap.Modal(document.getElementById('funcionarioModal')).show();
+        }
+
+        function viewFuncionario(id) {
+            const funcionario = funcionarios.find(f => f.id === id);
+            if (funcionario) {
+                openFuncionarioModal('Visualizar Funcionário', funcionario);
+                // Disable all form fields for view mode
+                const form = document.getElementById('funcionarioForm');
+                const inputs = form.querySelectorAll('input, select');
+                inputs.forEach(input => input.disabled = true);
+                
+                // Hide save button
+                document.querySelector('#funcionarioModal .btn-primary').style.display = 'none';
+            }
+        }
+
+        function editFuncionario(id) {
+            const funcionario = funcionarios.find(f => f.id === id);
+            if (funcionario) {
+                openFuncionarioModal('Editar Funcionário', funcionario);
+            }
+        }
+
+        function deleteFuncionario(id) {
+            funcionarioToDelete = id;
+            new bootstrap.Modal(document.getElementById('deleteModal')).show();
+        }
+
+        async function confirmDelete() {
+            if (funcionarioToDelete) {
+                try {
+                    await apiRequest(`/api/Employees/${funcionarioToDelete}`, 'DELETE');
+                    showAlert('Funcionário excluído com sucesso!', 'success');
+                    loadData();
+                    bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+                } catch (error) {
+                    console.error('Erro ao excluir funcionário:', error);
+                    showAlert('Erro ao excluir funcionário', 'danger');
+                }
+                funcionarioToDelete = null;
+            }
+        }
+
+        async function saveFuncionario() {
+            const form = document.getElementById('funcionarioForm');
+            const funcionarioId = document.getElementById('funcionarioId').value;
+            
+            if (!validateForm(form)) {
+                return;
+            }
+
+            const funcionarioData = {
+                name: document.getElementById('nome').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('telefone').value || null,
+                position: document.getElementById('cargo').value || null,
+                companyId: parseInt(document.getElementById('empresaId').value)
+            };
+
+            if (funcionarioId) {
+                funcionarioData.isActive = document.getElementById('isActive').checked;
+            }
+
+            try {
+                if (funcionarioId) {
+                    await apiRequest(`/api/Employees/${funcionarioId}`, 'PUT', funcionarioData);
+                    showAlert('Funcionário atualizado com sucesso!', 'success');
+                } else {
+                    await apiRequest('/api/Employees', 'POST', funcionarioData);
+                    showAlert('Funcionário criado com sucesso!', 'success');
+                }
+                
+                bootstrap.Modal.getInstance(document.getElementById('funcionarioModal')).hide();
+                loadData();
+            } catch (error) {
+                console.error('Erro ao salvar funcionário:', error);
+                showAlert('Erro ao salvar funcionário', 'danger');
+            }
+        }
+
+        function formatPhone(phone) {
+            phone = phone.replace(/\D/g, '');
+            phone = phone.replace(/^(\d{2})(\d)/, '($1) $2');
+            phone = phone.replace(/(\d{5})(\d)/, '$1-$2');
+            return phone;
+        }
+    </script>
+</body>
+</html>
