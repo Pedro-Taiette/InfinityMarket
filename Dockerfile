@@ -1,59 +1,30 @@
-# ---------- Build the .NET API ----------
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-api
+# Build stage
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY InfinityMarket.api/ ./InfinityMarket.api/
+
+# Copie tudo do projeto para garantir que restore e publish funcionem corretamente
+COPY InfinityMarket.api/InfinityMarket.api/ ./InfinityMarket.api/
+COPY InfinityMarket.api/InfinityMarket.api.sln ./
+
 WORKDIR /src/InfinityMarket.api
+
 RUN dotnet restore
-RUN dotnet publish -c Release -o /app-api
+RUN dotnet publish -c Release -o /app/publish
 
-
-# ---------- Build the React/Next.js Client ----------
-FROM node:20 AS build-client
-WORKDIR /src/client
-COPY InfinityMarket.api/infinitymarket.client/ ./
-RUN corepack enable && corepack prepare pnpm@8.15.5 --activate
-RUN pnpm install
-RUN pnpm run build
-
-
-# ---------- Runtime Container ----------
+# Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
-
-# Install Node for frontend
-RUN apt-get update && \
-    apt-get install -y curl ca-certificates gnupg && \
-    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs && \
-    npm install -g corepack && \
-    corepack enable && corepack prepare pnpm@8.15.5 --activate && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
 
-# Copy API
-COPY --from=build-api /app-api ./api
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
-# Copy built Next.js app
-WORKDIR /app/client
-COPY --from=build-client /src/client/.next ./.next
-COPY --from=build-client /src/client/public ./public
-COPY --from=build-client /src/client/node_modules ./node_modules
-COPY --from=build-client /src/client/package.json ./package.json
-COPY --from=build-client /src/client/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=build-client /src/client/next.config.mjs ./next.config.mjs
+COPY --from=build /app/publish /app
 
-# Back to root app directory
-WORKDIR /app
-
-# Entrypoint script
-COPY entrypoint.sh .
-RUN sed -i 's/\r$//' ./entrypoint.sh && chmod +x ./entrypoint.sh
-
-# Set non-root user for safety
 RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
 USER appuser
 
-EXPOSE 5000
-EXPOSE 3000
+EXPOSE 8080
 
-ENTRYPOINT ["./entrypoint.sh"]
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8080/health || exit 1
+
+ENTRYPOINT ["dotnet", "InfinityMarket.api.dll"]

@@ -4,7 +4,7 @@
 const bootstrap = window.bootstrap
 
 // API Configuration
-const API_BASE_URL = "https://localhost:7124" // Adjust this to your API URL
+const API_BASE_URL = "https://localhost:8080" // Adjust this to your API URL
 
 // Global variables
 let alertTimeout

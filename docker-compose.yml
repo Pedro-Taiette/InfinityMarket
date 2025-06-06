@@ -19,7 +19,7 @@ services:
     depends_on:
       sqlserver:
         condition: service_healthy
-    entrypoint: [ "bash", "-c", "/opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P 'Px3!nLo8@bQcT7wZ' -Q 'IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = ''InfinityMarketDB_7f2c'') CREATE DATABASE InfinityMarketDB_7f2c;'" ]
+    entrypoint: [ "bash", "-c", "/opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P 'Px3!nLo8@bQcT7wZ' -Q 'IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = ''InfinityMarketDB_7f2c'') CREATE DATABASE [InfinityMarketDB_7f2c]'" ]
 
   app:
     build:
@@ -27,10 +27,11 @@ services:
       dockerfile: Dockerfile
     container_name: infinitymarket-app
     ports:
-      - "5000:5000"
-      - "3000:3000"
+      - "8080:8080"
     environment:
       ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=InfinityMarketDB_7f2c;User Id=sa;Password=Px3!nLo8@bQcT7wZ;"
+      ASPNETCORE_ENVIRONMENT: "Production"
+      ASPNETCORE_URLS: "http://+:8080"
     depends_on:
       db-init:
         condition: service_completed_successfully
