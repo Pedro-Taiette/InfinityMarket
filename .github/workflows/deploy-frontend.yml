@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'InfinityMarket.api/infinitymarket.client/**'
+      - 'docs/**'
       - '.github/workflows/deploy-frontend.yml'
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
       - name: Upload HTML/CSS to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'InfinityMarket.api/infinitymarket.client'
+          path: 'docs/'
 
       - name: Deploy to GitHub Pages
         id: deployment
