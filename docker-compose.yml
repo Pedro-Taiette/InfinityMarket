@@ -2,24 +2,20 @@ version: "3.9"
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlserver
+    container_name: infinitymarket-sqlserver
     environment:
       ACCEPT_EULA: "Y"
       SA_PASSWORD: "Px3!nLo8@bQcT7wZ"
     ports:
       - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
     healthcheck:
       test: [ "CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Px3!nLo8@bQcT7wZ' -Q 'SELECT 1'" ]
       interval: 10s
       retries: 10
       start_period: 30s
-
-  db-init:
-    image: mcr.microsoft.com/mssql-tools
-    depends_on:
-      sqlserver:
-        condition: service_healthy
-    entrypoint: [ "bash", "-c", "/opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P 'Px3!nLo8@bQcT7wZ' -Q 'IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = ''InfinityMarketDB_7f2c'') CREATE DATABASE InfinityMarketDB_7f2c;'" ]
+      timeout: 5s
 
   app:
     build:
@@ -28,9 +24,14 @@ services:
     container_name: infinitymarket-app
     ports:
       - "5000:5000"
-      - "3000:3000"
     environment:
-      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=InfinityMarketDB_7f2c;User Id=sa;Password=Px3!nLo8@bQcT7wZ;"
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5000
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=InfinityMarketDB_7f2c;User Id=sa;Password=Px3!nLo8@bQcT7wZ;TrustServerCertificate=True;
     depends_on:
-      db-init:
-        condition: service_completed_successfully
+      sqlserver:
+        condition: service_healthy
+
+volumes:
+  sqlserver_data:
+
