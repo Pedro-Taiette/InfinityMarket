@@ -1,4 +1,4 @@
-# Infinity Market - Sistema de Cotação
+# Infinity Market - Sistema de Cotação Eficiente
 
 Sistema de cotação para empresas, com frontend em HTML/CSS/JavaScript e backend em C#.
 
